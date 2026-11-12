@@ -1,15 +1,27 @@
-<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>OAuth 回调</title>
+<!doctype html>
+<html lang="zh">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title></title>
 <body style="font-family:system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 16px">
-<h1>Tesla 授权回调</h1>
+<div id="panel" hidden>
 <p id="status"></p>
-<table style="border-collapse:collapse"><tr><td><b>code</b></td><td><code id="code">-</code></td></tr><tr><td><b>state</b></td><td><code id="state">-</code></td></tr><tr><td><b>error</b></td><td><code id="error">-</code></td></tr></table>
-<p>完整回调 URL（请复制后私下发给助手，不要公开分享）：</p>
+<p>请复制下面的完整地址，私下发给助手，不要发到公开场合：</p>
 <textarea id="url" readonly rows="4" style="width:100%"></textarea>
-<p><button id="copy">复制完整 URL</button> <span id="msg"></span></p>
+<p><button id="copy">复制完整地址</button> <span id="msg"></span></p>
+</div>
 <script>
 const p=new URLSearchParams(location.search);
-for(const k of ['code','state','error'])document.getElementById(k).textContent=p.get(k)||'-';
-document.getElementById('status').textContent=p.get('code')?'✅ 已收到授权 code。':(p.get('error')?'❌ 授权失败：'+(p.get('error_description')||p.get('error')):'未检测到 code 参数。');
-const u=document.getElementById('url');u.value=location.href;
-document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);document.getElementById('msg').textContent='已复制';}catch(e){u.select();document.execCommand('copy');document.getElementById('msg').textContent='已复制';}};
-</script></body></html>
+const has=p.has('code')||p.has('state')||p.has('error');
+if(!has){document.body.innerHTML='';}
+else{
+  document.getElementById('panel').hidden=false;
+  document.getElementById('status').textContent=p.get('code')?'已收到授权，请复制地址发给助手。':(p.get('error')?'授权未完成：'+(p.get('error_description')||p.get('error')):'未检测到授权参数。');
+  const u=document.getElementById('url');u.value=location.href;
+  document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);document.getElementById('msg').textContent='已复制';}catch(e){u.select();document.execCommand('copy');document.getElementById('msg').textContent='已复制';}};
+}
+</script>
+</body>
+</html>
